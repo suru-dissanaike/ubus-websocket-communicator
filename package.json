@@ -1,0 +1,22 @@
+{
+  "name": "ubus-websocket-communicator",
+  "version": "0.0.1",
+  "description": "Helper library for openWrt ubus communication over WebSocket. Can be used towards OpenWrt WebSocket Daemon (OWSD).",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "mocha --reporter spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/suru-dissanaike/ubus-websocket-communicator.git"
+  },
+  "author": "Suru Dissanaike <suru.dissanaike@himinds.com> (http://www.himinds.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/suru-dissanaike/ubus-websocket-communicator/issues"
+  },
+  "homepage": "https://github.com/suru-dissanaike/ubus-websocket-communicator#readme",
+  "engines": {
+    "node": ">=10.4.1"
+  } 
+}
