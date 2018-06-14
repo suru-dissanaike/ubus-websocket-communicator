@@ -1,6 +1,6 @@
 {
   "name": "ubus-websocket-communicator",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Helper library for openWrt ubus communication over WebSocket. Can be used towards OpenWrt WebSocket Daemon (OWSD).",
   "main": "src/index.js",
   "scripts": {
