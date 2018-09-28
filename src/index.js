@@ -1,3 +1,4 @@
-exports.printMsg = function() {
-  console.log("ubus-websocket-communicator");
-}
+"use strict";
+
+const UbusWebSocket = require('./lib/ubus-ws-lib');
+module.exports = UbusWebSocket;

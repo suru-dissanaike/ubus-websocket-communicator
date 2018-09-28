@@ -20,4 +20,40 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA
  */
- 
+
+"use strict"
+
+const UbusWebSocket = require('..');
+
+const WS_IP = "192.168.2.1";
+const WS_PORT = 80;
+
+const WS_USER_NAME = "api";
+const WS_PASSWORD = "api";
+
+(async() => {
+   const communicator = new UbusWebSocket(WS_IP, WS_PORT, WS_USER_NAME, WS_PASSWORD);
+
+   try {
+      await communicator.init();
+      let command = {
+         method: 'call',
+         params: [
+            'router.wps',
+            'checkpin', {
+               pin: '1234'
+            }
+         ],
+         expectedResult: {
+            valid: true
+         }
+      };
+      let response = await communicator.sendMessage(command);
+      console.log(response);
+
+      process.exit();
+   } catch (e) {
+      console.log(e);
+   }
+
+})();
