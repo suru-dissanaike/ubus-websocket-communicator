@@ -20,7 +20,7 @@ An example to check if the PIN "1234" is valid as Wi-Fi Protected Setup (WPS) pi
 ```javascript
 "use strict";
 
-const wsUBUS = require("UbusWebSocket");
+const wsUBUS = require("ubus-websocket-communicator");
 const WS_IP = "192.168.1.1";
 const WS_PORT = 80;
 
