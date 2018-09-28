@@ -97,25 +97,47 @@ class UbusWebSocket {
       }
     }
 
+    let getPromiseById = (id) => {
+      let promiseIdx = this._preparedPromises.findIndex((sentPromise) => { return id == sentPromise.id });
+      let promise = this._preparedPromises.splice(promiseIdx, 1)[0];
+
+      return promise;
+    }
+
     // define the ubus response handler
     let onUbusRes = (data) => {
-      const uCallParser = JSON.parse(data);
+      let uCallParser
 
-      let queryIdx = this._preparedPromises.findIndex((sentQuery) => { return(uCallParser.id == sentQuery.id) });
-      let query = this._preparedPromises.splice(queryIdx, 1)[0];
+      try {
+        uCallParser = JSON.parse(data);
+      } catch {
+        let partialJson = data.split("\"id\"")[1];
+        let id = (partialJson
+          .match(/\d+\.\d+|\d+\b|\d+(?=\w)/g) || [])
+          .map(function (v) { return +v; }).shift();
+        let promise = getPromiseById(id);
 
-      if (query == null)
-        query.reject("inconsistent response from ubus");
+        this._activeQueryCounter--;
+        if (this._activeQueryCounter <= 0)
+          queryDispatcher();
+
+        promise.reject("response is not valid json");
+        return;
+      }
+
+      let promise = getPromiseById(uCallParser.id);
+
+      if (promise == null)
+        promise.reject("inconsistent response from ubus");
 
       this._activeQueryCounter--;
-
       if (this._activeQueryCounter <= 0)
         queryDispatcher();
 
       if (uCallParser.result[0] == 0)
-        query.resolve(uCallParser.result[1]);
+        promise.resolve(uCallParser.result[1]);
       else
-        query.resolve((UBUS_ERROR_CODES[uCallParser.result[0]]));
+        promise.resolve((UBUS_ERROR_CODES[uCallParser.result[0]]));
     }
 
     return new Promise((resolve, reject) => {
@@ -227,7 +249,7 @@ class UbusWebSocket {
       obj.reject = reject;
       this._preparedPromises.push(obj);
       if (this._activeQueryCounter < MAX_ACTIVE_QUERIES){
-		    this._activeQueryCounter++;
+        this._activeQueryCounter++;
         this._ws.send(msg, { mask: false }, error => {
           if (error) {
             this._activeQueryCounter--;

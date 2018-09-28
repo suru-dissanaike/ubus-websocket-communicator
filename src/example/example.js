@@ -1,11 +1,11 @@
 /*
- * Copyright (C) 2018 iopsys Software Solutions AB.
- *
+ * Copyright (C) 2018 iopsys Software Solutions AB. 
+ * 
  * All rights reserved.
  *
  * Author:        Suru Dissanaike   <suru.dissanaike@iopsys.eu>
  * Author:        Jakob Olsson      <jakob.olsson@iopsys.eu>
- *
+ * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * version 2 as published by the Free Software Foundation.
@@ -21,22 +21,23 @@
  * 02110-1301 USA
  */
 
-"use strict"
+ "use strict"
 
-const UbusWebSocket = require('..');
-
-const WS_IP = "192.168.2.1";
+const wsUBUS = require('..');
+const WS_IP = "192.168.1.1";
 const WS_PORT = 80;
 
 const WS_USER_NAME = "api";
 const WS_PASSWORD = "api";
 
 (async() => {
-   const communicator = new UbusWebSocket(WS_IP, WS_PORT, WS_USER_NAME, WS_PASSWORD);
+   const communicator = new wsUBUS(WS_IP, WS_PORT, WS_USER_NAME, WS_PASSWORD);
+
 
    try {
       await communicator.init();
-      let command = {
+
+      var command = {
          method: 'call',
          params: [
             'router.wps',
@@ -48,8 +49,14 @@ const WS_PASSWORD = "api";
             valid: true
          }
       };
-      let response = await communicator.sendMessage(command);
-      console.log(response);
+
+      await communicator.sendMessage(command)
+        .then(response => {
+            console.log("successful -- response:\n", response);
+        })
+        .catch(err => {
+          console.log("failure -- response:\n", err);
+        });
 
       process.exit();
    } catch (e) {
