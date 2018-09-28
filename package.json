@@ -11,7 +11,7 @@
     "url": "git+https://github.com/suru-dissanaike/ubus-websocket-communicator.git"
   },
   "author": "Suru Dissanaike <suru.dissanaike@himinds.com> (http://www.himinds.com)",
-  "license": "GPL2",
+  "license": "GPL-2.0-only",
   "bugs": {
     "url": "https://github.com/suru-dissanaike/ubus-websocket-communicator/issues"
   },
