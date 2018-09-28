@@ -18,9 +18,10 @@ If you a running iopsysWRT everything will be available by default. Just check t
 An example to check if the PIN "1234" is valid as Wi-Fi Protected Setup (WPS) pin.
 
 ```javascript
- "use strict"
 
-const wsUBUS = require('..');
+"use strict"
+
+const wsUBUS = require('ubus-websocket-communicator');
 const WS_IP = "192.168.1.1";
 const WS_PORT = 80;
 
