@@ -18,23 +18,23 @@ If you a running iopsysWRT everything will be available by default. Just check t
 An example to check if the PIN "1234" is valid as Wi-Fi Protected Setup (WPS) pin.
 
 ```javascript
+ "use strict"
 
-"use strict"
-
-const UbusWebSocket = require('..');
-
-const WS_IP = "192.168.2.1";
+const wsUBUS = require('..');
+const WS_IP = "192.168.1.1";
 const WS_PORT = 80;
 
 const WS_USER_NAME = "api";
 const WS_PASSWORD = "api";
 
 (async() => {
-   const communicator = new UbusWebSocket(WS_IP, WS_PORT, WS_USER_NAME, WS_PASSWORD);
+   const communicator = new wsUBUS(WS_IP, WS_PORT, WS_USER_NAME, WS_PASSWORD);
+
 
    try {
       await communicator.init();
-      let command = {
+
+      var command = {
          method: 'call',
          params: [
             'router.wps',
@@ -46,8 +46,14 @@ const WS_PASSWORD = "api";
             valid: true
          }
       };
-      let response = await communicator.sendMessage(command);
-      console.log(response);
+
+      await communicator.sendMessage(command)
+        .then(response => {
+            console.log("successful -- response:\n", response);
+        })
+        .catch(err => {
+          console.log("failure -- response:\n", err);
+        });
 
       process.exit();
    } catch (e) {
@@ -55,7 +61,6 @@ const WS_PASSWORD = "api";
    }
 
 })();
-
 ```
 
 ## License
