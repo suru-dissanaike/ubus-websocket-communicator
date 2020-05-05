@@ -88,7 +88,9 @@ class UbusWebSocket {
     let queryDispatcher = () => {
       while (this._preparedQueries.length > 0 && this._activeQueryCounter < MAX_ACTIVE_QUERIES) {
         this._activeQueryCounter++;
-        this._ws.send(this._preparedQueries.shift(), { mask: false }, error => {
+        this._ws.send(this._preparedQueries.shift(), {
+          mask: false
+        }, error => {
           if (error) {
             this._activeQueryCounter--;
             reject(error);
@@ -98,7 +100,9 @@ class UbusWebSocket {
     }
 
     let getPromiseById = (id) => {
-      let promiseIdx = this._preparedPromises.findIndex((sentPromise) => { return id == sentPromise.id });
+      let promiseIdx = this._preparedPromises.findIndex((sentPromise) => {
+        return id == sentPromise.id
+      });
       let promise = this._preparedPromises.splice(promiseIdx, 1)[0];
 
       return promise;
@@ -113,8 +117,10 @@ class UbusWebSocket {
       } catch {
         let partialJson = data.split("\"id\"")[1];
         let id = (partialJson
-          .match(/\d+\.\d+|\d+\b|\d+(?=\w)/g) || [])
-          .map(function (v) { return +v; }).shift();
+            .match(/\d+\.\d+|\d+\b|\d+(?=\w)/g) || [])
+          .map(function (v) {
+            return +v;
+          }).shift();
         let promise = getPromiseById(id);
 
         this._activeQueryCounter--;
@@ -157,7 +163,9 @@ class UbusWebSocket {
         log.info('connected to CPE');
 
         if (typeof this._sessionID === 'undefined') {
-          this._ws.send(msg, {mask: true}, (error) => {
+          this._ws.send(msg, {
+            mask: true
+          }, (error) => {
             if (error)
               reject(error);
           });
@@ -168,7 +176,7 @@ class UbusWebSocket {
 
       // define method to manage initiation response
       let onConnection = (data) => {
-          let uCallParser = JSON.parse(data);
+        let uCallParser = JSON.parse(data);
 
         try {
           this._sessionID = uCallParser.result[1].ubus_rpc_session;
@@ -207,14 +215,14 @@ class UbusWebSocket {
   }
 
   /**
-  * close()
-  * Close the websocket if it is open.
-  *
-  * @public
-  */
+   * close()
+   * Close the websocket if it is open.
+   *
+   * @public
+   */
   close() {
     return new Promise((resolve, reject) => {
-      if(this._initialized)
+      if (this._initialized)
         this._ws.close();
       else
         resolve("No socket open!")
@@ -223,16 +231,21 @@ class UbusWebSocket {
   }
 
   /**
-  *
-  * sendMessage(command)
-  * Promise based send function, sends a ubus formated command, resolve the response as a string
-  *
-  * @param {command}    example) var command = {method: 'call', params: ['router.wps','checkpin', {pin: '1234'}], expectedResult: {valid: false}};
-  *
-  * @public
-  */
-  sendMessage(command) {
-    let obj =  {"id": this._queryID};
+   *
+   * sendMessage(command)
+   * Promise based send function, sends a ubus formated command, resolve the response as a string
+   *
+   * @param {command}    example) var command = {method: 'call', params: ['router.wps','checkpin', {pin: '1234'}], expectedResult: {valid: false}};
+   *
+   * @public
+   */
+  sendMessage(cmd) {
+
+    let command = JSON.parse(JSON.stringify(cmd));
+
+    let obj = {
+      "id": this._queryID
+    };
     const id = this._queryID++;
 
     return new Promise((resolve, reject) => {
@@ -248,9 +261,11 @@ class UbusWebSocket {
       obj.resolve = resolve;
       obj.reject = reject;
       this._preparedPromises.push(obj);
-      if (this._activeQueryCounter < MAX_ACTIVE_QUERIES){
+      if (this._activeQueryCounter < MAX_ACTIVE_QUERIES) {
         this._activeQueryCounter++;
-        this._ws.send(msg, { mask: false }, error => {
+        this._ws.send(msg, {
+          mask: false
+        }, error => {
           if (error) {
             this._activeQueryCounter--;
             reject(error);
