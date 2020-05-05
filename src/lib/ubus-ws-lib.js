@@ -201,7 +201,7 @@ class UbusWebSocket {
         log.info("closeEvent, code: " + msg.code);
         this._initialized = false;
 
-        reject(error(msg.code));
+        reject(msg.reason);
       });
     });
   }

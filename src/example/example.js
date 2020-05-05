@@ -27,8 +27,8 @@ const wsUBUS = require('..');
 const WS_IP = "192.168.1.1";
 const WS_PORT = 80;
 
-const WS_USER_NAME = "api";
-const WS_PASSWORD = "api";
+const WS_USER_NAME = "admin";
+const WS_PASSWORD = "admin";
 
 (async() => {
    const communicator = new wsUBUS(WS_IP, WS_PORT, WS_USER_NAME, WS_PASSWORD);
@@ -40,10 +40,8 @@ const WS_PASSWORD = "api";
       var command = {
          method: 'call',
          params: [
-            'router.wps',
-            'checkpin', {
-               pin: '1234'
-            }
+            'juci.network',
+            'online', {}
          ],
          expectedResult: {
             valid: true
